@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BMI Calculator</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .bmi-container {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    width: 350px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    text-align: center;
+  }
+  h1 {
+    color: #5a2a83;
+  }
+  label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+    text-align: left;
+  }
+  input[type=number] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    font-size: 16px;
+  }
+  input[type=number]:focus {
+    border-color: #764ba2;
+    outline: none;
+  }
+  button {
+    margin-top: 20px;
+    width: 100%;
+    background: #764ba2;
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 18px;
+    border-radius: 30px;
+    cursor: pointer;
+  }
+  button:hover {
+    background: #5a2a83;
+  }
+  .result {
+    margin-top: 25px;
+    padding: 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 18px;
+    display: none;
+  }
+  .underweight {
+    background-color: #f0e68c;
+    color: #9b870c;
+  }
+  .normal {
+    background-color: #98fb98;
+    color: #2e8b57;
+  }
+  .overweight {
+    background-color: #ffcccb;
+    color: #b22222;
+  }
+  .obese {
+    background-color: #ff6f61;
+    color: white;
+  }
+</style>
+</head>
+<body>
+  <div class="bmi-container">
+    <h1>🏋️‍♂️ BMI Calculator</h1>
+    <form id="bmiForm">
+      <label for="weight">Weight (kg)</label>
+      <input type="number" id="weight" min="1" step="any" required placeholder="Enter weight in kg" />
+      <label for="height">Height (cm)</label>
+      <input type="number" id="height" min="30" step="any" required placeholder="Enter height in cm" />
+      <button type="submit">Calculate BMI</button>
+    </form>
+
+    <div id="result" class="result">
+      <h2>Your BMI is: <span id="bmiValue"></span></h2>
+      <p><strong>Category:</strong> <span id="bmiCategory"></span></p>
+      <p><strong>Calculation:</strong> BMI = Weight (kg) ÷ Height (m)²</p>
+      <p><strong>Inputs:</strong> Weight = <span id="inputWeight"></span> kg, Height = <span id="inputHeightCm"></span> cm (<span id="inputHeightM"></span> m)</p>
+    </div>
+  </div>
+
+<script>
+  const bmiForm = document.getElementById("bmiForm");
+  const resultDiv = document.getElementById("result");
+  const bmiValueSpan = document.getElementById("bmiValue");
+  const bmiCategorySpan = document.getElementById("bmiCategory");
+  const inputWeightSpan = document.getElementById("inputWeight");
+  const inputHeightCmSpan = document.getElementById("inputHeightCm");
+  const inputHeightMSpan = document.getElementById("inputHeightM");
+
+  bmiForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const weight = parseFloat(document.getElementById("weight").value);
+    const heightCm = parseFloat(document.getElementById("height").value);
+
+    if (isNaN(weight) || isNaN(heightCm) || weight <= 0 || heightCm <= 0) {
+      alert("Please enter valid positive numbers for weight and height.");
+      return;
+    }
+
+    const heightM = heightCm / 100;
+    const bmi = weight / (heightM * heightM);
+    const bmiRounded = bmi.toFixed(1);
+
+    bmiValueSpan.textContent = bmiRounded;
+
+    let category = "";
+    let colorClass = "";
+
+    if (bmi < 18.5) {
+      category = "Underweight";
+      colorClass = "underweight";
+    } else if (bmi < 24.9) {
+      category = "Normal weight";
+      colorClass = "normal";
+    } else if (bmi < 29.9) {
+      category = "Overweight";
+      colorClass = "overweight";
+    } else {
+      category = "Obese";
+      colorClass = "obese";
+    }
+
+    bmiCategorySpan.textContent = category;
+    inputWeightSpan.textContent = weight;
+    inputHeightCmSpan.textContent = heightCm;
+    inputHeightMSpan.textContent = heightM.toFixed(2);
+
+    resultDiv.className = "result " + colorClass;
+    resultDiv.style.display = "block";
+  });
+</script>
+</body>
+</html>
